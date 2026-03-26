@@ -2,7 +2,7 @@ name: KirtHealthSync
 options:
   bundleIdPrefix: com.kirt
   deployment:
-    iOS: "20.0"
+    iOS: "26.3"
   xcodeVersion: "16.0"
   createIntermediateGroups: true
 
@@ -56,6 +56,6 @@ targets:
         product: FirebaseAuth
       - package: Firebase
         product: FirebaseAnalytics
-      - sdk: UIKit.framework
-      - sdk: HealthKit.framework
-      - sdk: BackgroundTasks.framework
+      - framework: UIKit.framework
+      - framework: HealthKit.framework
+      - framework: BackgroundTasks.framework
