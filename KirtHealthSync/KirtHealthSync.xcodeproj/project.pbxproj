@@ -7,10 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0879A0EEB8AB37B6A2EA5679 /* UIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 21C79A6A51BE1DC5BE76F96F /* UIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		33A600E11BBAEF7A6DC72EA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C5698ECE7FA528C7F0BEC2 /* AppDelegate.swift */; };
 		3B81304A37BAD16A7FF20503 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF46E4571286030F098071B5 /* LaunchScreen.storyboard */; };
-		4263AB0D07FD1776D2629F6F /* HealthKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F7B77253847BF06DFF92D86C /* HealthKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		46BA3A6292082A4403D8163E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5D676CC12E97CA8A1496C45A /* FirebaseAuth */; };
 		56DBF22F64E0967C40B4C807 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = C34211DA44DD8055A43623B8 /* FirebaseAnalytics */; };
 		5FB35B5793E5AC0233E1C523 /* KirtHealthSyncApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AC31C12618C3BEFE45DF77 /* KirtHealthSyncApp.swift */; };
@@ -22,29 +20,12 @@
 		B1DCFDDE78CD5E1D779CA87B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CA353631375CC62332C73E2 /* GoogleService-Info.plist */; };
 		BA03C702FE61B136635C5EB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 073CE9E8020A547BE50D96DE /* Assets.xcassets */; };
 		E2D675D8BA549AFA0FEE3B11 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21C79A6A51BE1DC5BE76F96F /* UIKit.framework */; };
-		E826ECD284462FD715C5BF27 /* BackgroundTasks.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 121B8AB379631A4E7F99A3D9 /* BackgroundTasks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		1B4BBDA779366439A0739A68 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				0879A0EEB8AB37B6A2EA5679 /* UIKit.framework in Embed Frameworks */,
-				4263AB0D07FD1776D2629F6F /* HealthKit.framework in Embed Frameworks */,
-				E826ECD284462FD715C5BF27 /* BackgroundTasks.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		073CE9E8020A547BE50D96DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		121B8AB379631A4E7F99A3D9 /* BackgroundTasks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BackgroundTasks.framework; sourceTree = "<group>"; };
-		21C79A6A51BE1DC5BE76F96F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UIKit.framework; sourceTree = "<group>"; };
+		121B8AB379631A4E7F99A3D9 /* BackgroundTasks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BackgroundTasks.framework; path = System/Library/Frameworks/BackgroundTasks.framework; sourceTree = SDKROOT; };
+		21C79A6A51BE1DC5BE76F96F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		27AC31C12618C3BEFE45DF77 /* KirtHealthSyncApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KirtHealthSyncApp.swift; sourceTree = "<group>"; };
 		4CA353631375CC62332C73E2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		69F66A304B40DF7D08964298 /* KirtHealthSync.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = KirtHealthSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,7 +34,7 @@
 		90C5698ECE7FA528C7F0BEC2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C409ABE8C92B69AFE42DA736 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E59BC0BDDFDCB36A68F5546E /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
-		F7B77253847BF06DFF92D86C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HealthKit.framework; sourceTree = "<group>"; };
+		F7B77253847BF06DFF92D86C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		FF46E4571286030F098071B5 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -159,7 +140,6 @@
 				36F5B3CF35B005D386E9034A /* Sources */,
 				C46D21DF2924A5F17789F7E9 /* Resources */,
 				C4B22CF23667477DEB7B70D0 /* Frameworks */,
-				1B4BBDA779366439A0739A68 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -248,10 +228,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\".\"",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -275,10 +251,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\".\"",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
