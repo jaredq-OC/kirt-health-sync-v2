@@ -19,7 +19,7 @@ class HealthKitManager {
         HKObjectType.quantityType(forIdentifier: .heartRate)!,
         HKObjectType.quantityType(forIdentifier: .restingHeartRate)!,
         HKObjectType.quantityType(forIdentifier: .walkingHeartRateAverage)!,
-        HKObjectType.quantityType(forIdentifier: .sleepAnalysis)!,
+        HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!,
         HKObjectType.workoutType(),
         HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed)!,
         HKObjectType.quantityType(forIdentifier: .dietaryProtein)!,
@@ -193,19 +193,30 @@ class HealthKitManager {
                     totalSleepMinutes += minutes
 
                     let stageName: String
-                    switch categorySample.value {
-                    case HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue:
-                        stageName = "asleep"
-                    case HKCategoryValueSleepAnalysis.asleepCore.rawValue:
-                        stageName = "asleepCore"
-                    case HKCategoryValueSleepAnalysis.asleepDeep.rawValue:
-                        stageName = "asleepDeep"
-                    case HKCategoryValueSleepAnalysis.awake.rawValue:
-                        stageName = "awake"
-                    case HKCategoryValueSleepAnalysis.asleepREM.rawValue:
-                        stageName = "asleepREM"
-                    default:
-                        stageName = "unknown"
+                    if #available(iOS 16.0, *) {
+                        switch categorySample.value {
+                        case HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue:
+                            stageName = "asleep"
+                        case HKCategoryValueSleepAnalysis.asleepCore.rawValue:
+                            stageName = "asleepCore"
+                        case HKCategoryValueSleepAnalysis.asleepDeep.rawValue:
+                            stageName = "asleepDeep"
+                        case HKCategoryValueSleepAnalysis.awake.rawValue:
+                            stageName = "awake"
+                        case HKCategoryValueSleepAnalysis.asleepREM.rawValue:
+                            stageName = "asleepREM"
+                        default:
+                            stageName = "unknown"
+                        }
+                    } else {
+                        switch categorySample.value {
+                        case HKCategoryValueSleepAnalysis.asleep.rawValue:
+                            stageName = "asleep"
+                        case HKCategoryValueSleepAnalysis.awake.rawValue:
+                            stageName = "awake"
+                        default:
+                            stageName = "unknown"
+                        }
                     }
                     sleepStages[stageName] = (sleepStages[stageName] ?? 0) + minutes
                 }
@@ -279,11 +290,11 @@ class HealthKitManager {
 
             for workout in workouts {
                 let data: [String: Any] = [
-                    "activityType": workout.workoutActivityType.name,
+                    "activityType": String(describing: workout.workoutActivityType),
                     "duration": workout.duration,
                     "startDate": ISO8601DateFormatter().string(from: workout.startDate),
                     "endDate": ISO8601DateFormatter().string(from: workout.endDate),
-                    "energyBurned": workout.energyBurned?.doubleValue(for: .kilocalorie()) ?? 0,
+                    "energyBurned": workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0,
                     "timestamp": FieldValue.serverTimestamp()
                 ]
 
