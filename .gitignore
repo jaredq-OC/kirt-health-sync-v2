@@ -1,0 +1,4 @@
+.build/
+.spm-packages/
+*.xcodeproj/
+*.xcworkspace/
