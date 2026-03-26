@@ -40,6 +40,6 @@ targets:
         product: FirebaseAuth
       - package: Firebase
         product: FirebaseAnalytics
-      - framework: UIKit.framework
-      - framework: HealthKit.framework
-      - framework: BackgroundTasks.framework
+      - sdk: UIKit.framework
+      - sdk: HealthKit.framework
+      - sdk: BackgroundTasks.framework
