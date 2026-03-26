@@ -11,18 +11,44 @@ class HealthKitManager {
 
     // HealthKit data types to sync
     private let typesToRead: Set<HKObjectType> = [
+        // Activity
         HKObjectType.quantityType(forIdentifier: .stepCount)!,
         HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
         HKObjectType.quantityType(forIdentifier: .basalEnergyBurned)!,
+        HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+        HKObjectType.quantityType(forIdentifier: .distanceRunning)!,
+        HKObjectType.quantityType(forIdentifier: .distanceSwimming)!,
+        HKObjectType.quantityType(forIdentifier: .swimmingStrokeCount)!,
+        HKObjectType.quantityType(forIdentifier: .vo2Max)!,
+        // Body Measurements
         HKObjectType.quantityType(forIdentifier: .bodyMass)!,
         HKObjectType.quantityType(forIdentifier: .height)!,
+        HKObjectType.quantityType(forIdentifier: .bodyFatPercentage)!,
+        HKObjectType.quantityType(forIdentifier: .leanBodyMass)!,
+        HKObjectType.quantityType(forIdentifier: .bodyMassIndex)!,
+        // Heart
         HKObjectType.quantityType(forIdentifier: .heartRate)!,
         HKObjectType.quantityType(forIdentifier: .restingHeartRate)!,
         HKObjectType.quantityType(forIdentifier: .walkingHeartRateAverage)!,
-        HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!,
+        HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!,
         HKObjectType.quantityType(forIdentifier: .cardioFitnessLevel)!,
-        HKObjectType.categoryType(forIdentifier: .mindfulnessSession)!,
+        HKObjectType.categoryType(forIdentifier: .electrocardiogram)!,
         HKObjectType.workoutType(),
+        // Sleep
+        HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!,
+        HKObjectType.categoryType(forIdentifier: .mindfulnessSession)!,
+        // Vitals
+        HKObjectType.quantityType(forIdentifier: .respiratoryRate)!,
+        HKObjectType.quantityType(forIdentifier: .bloodGlucose)!,
+        HKObjectType.quantityType(forIdentifier: .bloodPressureSystolic)!,
+        HKObjectType.quantityType(forIdentifier: .bloodPressureDiastolic)!,
+        HKObjectType.quantityType(forIdentifier: .oxygenSaturation)!,
+        // Running Metrics
+        HKObjectType.quantityType(forIdentifier: .runningSpeed)!,
+        HKObjectType.quantityType(forIdentifier: .runningPower)!,
+        // Audio
+        HKObjectType.quantityType(forIdentifier: .headphoneAudioExposure)!,
+        // Nutrition
         HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed)!,
         HKObjectType.quantityType(forIdentifier: .dietaryProtein)!,
         HKObjectType.quantityType(forIdentifier: .dietaryCarbohydrates)!,
@@ -30,6 +56,7 @@ class HealthKitManager {
         HKObjectType.quantityType(forIdentifier: .dietaryFiber)!,
         HKObjectType.quantityType(forIdentifier: .dietarySugar)!,
         HKObjectType.quantityType(forIdentifier: .dietarySodium)!,
+        HKObjectType.quantityType(forIdentifier: .dietaryWater)!,
     ]
 
     private let typesToWrite: Set<HKSampleType> = [
@@ -193,6 +220,15 @@ class HealthKitManager {
             ("heartRate", syncRestingHeartRate),
             ("cardioFitness", syncCardioFitness),
             ("mindfulness", syncMindfulness),
+            ("respiratory", syncRespiratoryRate),
+            ("bloodGlucose", syncBloodGlucose),
+            ("bloodPressure", syncBloodPressure),
+            ("oxygenSaturation", syncOxygenSaturation),
+            ("hrv", syncHRV),
+            ("runningMetrics", syncRunningMetrics),
+            ("swimming", syncSwimming),
+            ("bodyComposition", syncBodyComposition),
+            ("water", syncWater),
         ]
 
         for (name, syncFunc) in dataTypes {
@@ -462,3 +498,288 @@ class HealthKitManager {
         healthStore.execute(query)
     }
 }
+
+
+    // MARK: - Respiratory
+
+    private func syncRespiratoryRate(_ startDate: Date, _ endDate: Date, completion: @escaping (Any?, Error?) -> Void) {
+        guard let type = HKObjectType.quantityType(forIdentifier: .respiratoryRate) else {
+            completion(nil, nil); return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+        let query = HKSampleQuery(sampleType: type, predicate: predicate, limit: 1, sortDescriptors: [sortDescriptor]) { _, results, error in
+            if let error = error { completion(nil, error); return }
+            guard let sample = results?.first as? HKQuantitySample else { completion(nil, nil); return }
+            let value = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
+            let data: [String: Any] = [
+                "value": value, "unit": "breaths/min",
+                "startDate": ISO8601DateFormatter().string(from: sample.startDate),
+                "timestamp": FieldValue.serverTimestamp()
+            ]
+            self.db.collection("healthData").document("respiratory_\(Int(sample.startDate.timeIntervalSince1970))").setData(data) { error in
+                completion(error == nil ? "\(String(format: "%.1f", value)) brpm" : nil, error)
+            }
+        }
+        healthStore.execute(query)
+    }
+
+    // MARK: - Blood Metrics
+
+    private func syncBloodGlucose(_ startDate: Date, _ endDate: Date, completion: @escaping (Any?, Error?) -> Void) {
+        guard let type = HKObjectType.quantityType(forIdentifier: .bloodGlucose) else {
+            completion(nil, nil); return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+        let query = HKSampleQuery(sampleType: type, predicate: predicate, limit: 1, sortDescriptors: [sortDescriptor]) { _, results, error in
+            if let error = error { completion(nil, error); return }
+            guard let sample = results?.first as? HKQuantitySample else { completion(nil, nil); return }
+            let value = sample.quantity.doubleValue(for: HKUnit(dimension: .millimolePerLiter))
+            let data: [String: Any] = [
+                "value": value, "unit": "mmol/L",
+                "startDate": ISO8601DateFormatter().string(from: sample.startDate),
+                "timestamp": FieldValue.serverTimestamp()
+            ]
+            self.db.collection("healthData").document("glucose_\(Int(sample.startDate.timeIntervalSince1970))").setData(data) { error in
+                completion(error == nil ? String(format: "%.1f mmol/L", value) : nil, error)
+            }
+        }
+        healthStore.execute(query)
+    }
+
+    private func syncBloodPressure(_ startDate: Date, _ endDate: Date, completion: @escaping (Any?, Error?) -> Void) {
+        guard let systolicType = HKObjectType.quantityType(forIdentifier: .bloodPressureSystolic),
+              let diastolicType = HKObjectType.quantityType(forIdentifier: .bloodPressureDiastolic) else {
+            completion(nil, nil); return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+        let query = HKSampleQuery(sampleType: systolicType, predicate: predicate, limit: 1, sortDescriptors: [sortDescriptor]) { _, results, error in
+            if let error = error { completion(nil, error); return }
+            guard let systolic = results?.first as? HKQuantitySample else { completion(nil, nil); return }
+            let systValue = systolic.quantity.doubleValue(for: .millimeterOfMercury())
+            let diastolicQuery = HKSampleQuery(sampleType: diastolicType, predicate: predicate, limit: 1, sortDescriptors: sortDescriptor) { _, dResults, _ in
+                var diastValue: Double = 0
+                if let diast = dResults?.first as? HKQuantitySample {
+                    diastValue = diast.quantity.doubleValue(for: .millimeterOfMercury())
+                }
+                let data: [String: Any] = [
+                    "systolic": systValue, "diastolic": diastValue, "unit": "mmHg",
+                    "startDate": ISO8601DateFormatter().string(from: systolic.startDate),
+                    "timestamp": FieldValue.serverTimestamp()
+                ]
+                self.db.collection("healthData").document("bp_\(Int(systolic.startDate.timeIntervalSince1970))").setData(data) { error in
+                    completion(error == nil ? "\(Int(systValue))/\(Int(diastValue)) mmHg" : nil, error)
+                }
+            }
+            self.healthStore.execute(diastolicQuery)
+        }
+        healthStore.execute(query)
+    }
+
+    private func syncOxygenSaturation(_ startDate: Date, _ endDate: Date, completion: @escaping (Any?, Error?) -> Void) {
+        guard let type = HKObjectType.quantityType(forIdentifier: .oxygenSaturation) else {
+            completion(nil, nil); return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+        let query = HKSampleQuery(sampleType: type, predicate: predicate, limit: 1, sortDescriptors: [sortDescriptor]) { _, results, error in
+            if let error = error { completion(nil, error); return }
+            guard let sample = results?.first as? HKQuantitySample else { completion(nil, nil); return }
+            let value = sample.quantity.doubleValue(for: .percent())
+            let data: [String: Any] = [
+                "value": value * 100, "unit": "%",
+                "startDate": ISO8601DateFormatter().string(from: sample.startDate),
+                "timestamp": FieldValue.serverTimestamp()
+            ]
+            self.db.collection("healthData").document("spO2_\(Int(sample.startDate.timeIntervalSince1970))").setData(data) { error in
+                completion(error == nil ? String(format: "%.0f%%", value * 100) : nil, error)
+            }
+        }
+        healthStore.execute(query)
+    }
+
+    // MARK: - HRV & ECG
+
+    private func syncHRV(_ startDate: Date, _ endDate: Date, completion: @escaping (Any?, Error?) -> Void) {
+        guard let type = HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else {
+            completion(nil, nil); return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+        let query = HKSampleQuery(sampleType: type, predicate: predicate, limit: 1, sortDescriptors: [sortDescriptor]) { _, results, error in
+            if let error = error { completion(nil, error); return }
+            guard let sample = results?.first as? HKQuantitySample else { completion(nil, nil); return }
+            let value = sample.quantity.doubleValue(for: .secondUnit(with: .milli))
+            let data: [String: Any] = [
+                "value": value, "unit": "ms",
+                "startDate": ISO8601DateFormatter().string(from: sample.startDate),
+                "timestamp": FieldValue.serverTimestamp()
+            ]
+            self.db.collection("healthData").document("hrv_\(Int(sample.startDate.timeIntervalSince1970))").setData(data) { error in
+                completion(error == nil ? String(format: "%.1f ms", value) : nil, error)
+            }
+        }
+        healthStore.execute(query)
+    }
+
+    // MARK: - Running
+
+    private func syncRunningMetrics(_ startDate: Date, _ endDate: Date, completion: @escaping (Any?, Error?) -> Void) {
+        guard let speedType = HKObjectType.quantityType(forIdentifier: .runningSpeed),
+              let powerType = HKObjectType.quantityType(forIdentifier: .runningPower) else {
+            completion(nil, nil); return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+
+        var results: [String: Any] = [:]
+        let group = DispatchGroup()
+
+        group.enter()
+        let speedQuery = HKSampleQuery(sampleType: speedType, predicate: predicate, limit: 1, sortDescriptors: [sortDescriptor]) { _, samples, _ in
+            if let s = samples?.first as? HKQuantitySample {
+                let speed = s.quantity.doubleValue(for: HKUnit(from: "m/s"))
+                results["speed"] = speed
+            }
+            group.leave()
+        }
+        healthStore.execute(speedQuery)
+
+        group.enter()
+        let powerQuery = HKSampleQuery(sampleType: powerType, predicate: predicate, limit: 1, sortDescriptors: [sortDescriptor]) { _, samples, _ in
+            if let p = samples?.first as? HKQuantitySample {
+                let power = p.quantity.doubleValue(for: .watt())
+                results["power"] = power
+            }
+            group.leave()
+        }
+        healthStore.execute(powerQuery)
+
+        group.notify(queue: .main) {
+            if results.isEmpty { completion(nil, nil); return }
+            let data: [String: Any] = [
+                "speed": results["speed"] ?? 0,
+                "power": results["power"] ?? 0,
+                "unit": "m/s, W",
+                "startDate": ISO8601DateFormatter().string(from: startDate),
+                "timestamp": FieldValue.serverTimestamp()
+            ]
+            self.db.collection("healthData").document("running_\(Int(Date().timeIntervalSince1970))").setData(data) { error in
+                let speed = results["speed"] as? Double ?? 0
+                let power = results["power"] as? Double ?? 0
+                completion(error == nil ? "speed \(String(format: "%.1f", speed)) m/s, power \(Int(power)) W" : nil, error)
+            }
+        }
+    }
+
+    // MARK: - Swimming
+
+    private func syncSwimming(_ startDate: Date, _ endDate: Date, completion: @escaping (Any?, Error?) -> Void) {
+        guard let distType = HKObjectType.quantityType(forIdentifier: .distanceSwimming),
+              let strokeType = HKObjectType.quantityType(forIdentifier: .swimmingStrokeCount) else {
+            completion(nil, nil); return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+
+        var results: [String: Any] = [:]
+        let group = DispatchGroup()
+
+        group.enter()
+        let distQuery = HKSampleQuery(sampleType: distType, predicate: predicate, limit: 1, sortDescriptors: nil) { _, samples, _ in
+            if let d = samples?.first as? HKQuantitySample {
+                let dist = d.quantity.doubleValue(for: .meter())
+                results["distance"] = dist
+            }
+            group.leave()
+        }
+        healthStore.execute(distQuery)
+
+        group.enter()
+        let strokeQuery = HKSampleQuery(sampleType: strokeType, predicate: predicate, limit: 1, sortDescriptors: nil) { _, samples, _ in
+            if let s = samples?.first as? HKQuantitySample {
+                let strokes = s.quantity.doubleValue(for: .count())
+                results["strokes"] = Int(strokes)
+            }
+            group.leave()
+        }
+        healthStore.execute(strokeQuery)
+
+        group.notify(queue: .main) {
+            if results.isEmpty { completion(nil, nil); return }
+            let data: [String: Any] = [
+                "distance": results["distance"] ?? 0,
+                "strokes": results["strokes"] ?? 0,
+                "unit": "m, count",
+                "startDate": ISO8601DateFormatter().string(from: startDate),
+                "timestamp": FieldValue.serverTimestamp()
+            ]
+            self.db.collection("healthData").document("swimming_\(Int(Date().timeIntervalSince1970))").setData(data) { error in
+                completion(error == nil ? "dist \(Int(results["distance"] as? Double ?? 0))m, strokes \(results["strokes"] ?? 0)" : nil, error)
+            }
+        }
+    }
+
+    // MARK: - Body Composition
+
+    private func syncBodyComposition(_ startDate: Date, _ endDate: Date, completion: @escaping (Any?, Error?) -> Void) {
+        let types: [(String, HKQuantityTypeIdentifier)] = [
+            ("bodyFat", .bodyFatPercentage),
+            ("leanMass", .leanBodyMass),
+            ("bmi", .bodyMassIndex),
+        ]
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        var results: [String: Any] = [:]
+        let group = DispatchGroup()
+
+        for (name, identifier) in types {
+            guard let qType = HKObjectType.quantityType(forIdentifier: identifier) else { continue }
+            group.enter()
+            let query = HKSampleQuery(sampleType: qType, predicate: predicate, limit: 1, sortDescriptors: nil) { _, samples, _ in
+                if let s = samples?.first as? HKQuantitySample {
+                    let value = s.quantity.doubleValue(for: .percent())
+                    results[name] = value
+                }
+                group.leave()
+            }
+            healthStore.execute(query)
+        }
+
+        group.notify(queue: .main) {
+            if results.isEmpty { completion(nil, nil); return }
+            let data: [String: Any] = [
+                "bodyFatPercentage": results["bodyFat"] ?? 0,
+                "leanBodyMass": results["leanMass"] ?? 0,
+                "bmi": results["bmi"] ?? 0,
+                "startDate": ISO8601DateFormatter().string(from: startDate),
+                "timestamp": FieldValue.serverTimestamp()
+            ]
+            self.db.collection("healthData").document("bodyComp_\(Int(Date().timeIntervalSince1970))").setData(data) { error in
+                completion(error == nil ? "bodyFat \(String(format: "%.1f", results["bodyFat"] as? Double ?? 0))%, BMI \(String(format: "%.1f", results["bmi"] as? Double ?? 0))" : nil, error)
+            }
+        }
+    }
+
+    // MARK: - Water
+
+    private func syncWater(_ startDate: Date, _ endDate: Date, completion: @escaping (Any?, Error?) -> Void) {
+        guard let type = HKObjectType.quantityType(forIdentifier: .dietaryWater) else {
+            completion(nil, nil); return
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        let query = HKStatisticsQuery(quantityType: type, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            if let error = error { completion(nil, error); return }
+            let liters = result?.sumQuantity()?.doubleValue(for: .liter()) ?? 0
+            let data: [String: Any] = [
+                "value": liters, "unit": "L",
+                "startDate": ISO8601DateFormatter().string(from: startDate),
+                "timestamp": FieldValue.serverTimestamp()
+            ]
+            self.db.collection("healthData").document("water_\(Int(Date().timeIntervalSince1970))").setData(data) { error in
+                completion(error == nil ? String(format: "%.1f L", liters) : nil, error)
+            }
+        }
+        healthStore.execute(query)
+    }
+
