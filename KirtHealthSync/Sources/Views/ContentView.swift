@@ -72,7 +72,7 @@ class HealthDataViewModel: ObservableObject {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let today = formatter.string(from: Date())
-        return "kirt/daily/\(today)"
+        return "kirt/daily/\(today)/daily"
     }
 
     func loadData() {
