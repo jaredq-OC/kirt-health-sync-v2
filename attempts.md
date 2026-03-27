@@ -74,3 +74,25 @@
 **Error:** `Error: Failed to authenticate, have you run firebase login?`
 **Next:** Same as 2.1 — Kirt needs to run `firebase login:ci`. Rules file is ready at ~/Projects/kirt-health-sync/firestore.rules
 **Status:** BLOCKED
+
+---
+
+## Attempt 2.1-3 / 2.2-2: Firebase Auth — Still BLOCKED
+
+**Timestamp:** 2026-03-27 16:16 AEDT
+**Task:** Phase 2.1 (delete healthData) + Phase 2.2 (deploy firestore.rules)
+**Action:** Verified firebase CLI auth status, checked for firebase.json
+**Result:** BLOCKED — Firebase CLI not authenticated
+**Evidence:**
+- `firebase projects:list` → Error: Failed to authenticate
+- firebase.json: NOT FOUND in ~/Projects/kirt-health-sync/
+- firestore.rules: NOT FOUND in ~/Projects/kirt-health-sync/ (needs to be created)
+- GOOGLE_APPLICATION_CREDENTIALS: not set
+**Git commit from previous session:** 0a1d553 — iOS code (Phase 2.3) committed and pushed
+**Phase 2.3 iOS code:** ✓ Complete — committed and pushed
+**Phase 2.1 + 2.2:** Cannot proceed without Firebase auth — blocker unchanged
+**What Kirt needs to do:**
+  1. Run `firebase login:ci` on his Mac → share the token with me
+  2. OR: run `firebase init` in ~/Projects/kirt-health-sync to create firebase.json
+  3. OR: provide Firebase service account JSON → set GOOGLE_APPLICATION_CREDENTIALS
+**Status:** BLOCKED
