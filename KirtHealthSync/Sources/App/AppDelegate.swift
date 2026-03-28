@@ -21,9 +21,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                     } else {
                         print("[AppDelegate] Mock data failed: \(mockError?.localizedDescription ?? "unknown"), syncing anyway...")
                     }
-                    // Sync ONLY after mock data is confirmed written
-                    print("[AppDelegate] Calling startBackgroundSync...")
-                    HealthKitManager.shared.startBackgroundSync()
+                    // Sync 5s after mock data is written — gives HK time to index the saved samples
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                        print("[AppDelegate] Calling startBackgroundSync (5s after mock data)...")
+                        HealthKitManager.shared.startBackgroundSync()
+                    }
                 }
             } else if let error = error {
                 print("[AppDelegate] HealthKit authorization failed: \(error.localizedDescription)")
