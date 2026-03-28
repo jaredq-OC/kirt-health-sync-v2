@@ -13,11 +13,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         HealthKitManager.shared.requestAuthorization { success, error in
             if success {
                 print("[AppDelegate] HealthKit authorization granted")
-                // Write mock data first so there's data to sync
+                // Write mock data first, THEN sync — completion handler ensures ordering
                 print("[AppDelegate] Writing mock HealthKit data...")
                 HealthKitManager.shared.writeDebugMockData { mockSuccess, mockError in
-                    print("[AppDelegate] Mock data write: \(mockSuccess), error: \(mockError?.localizedDescription ?? "none")")
-                    print("[AppDelegate] Starting background sync...")
+                    if mockSuccess {
+                        print("[AppDelegate] Mock data written successfully, starting sync...")
+                    } else {
+                        print("[AppDelegate] Mock data failed: \(mockError?.localizedDescription ?? "unknown"), syncing anyway...")
+                    }
+                    // Sync ONLY after mock data is confirmed written
+                    print("[AppDelegate] Calling startBackgroundSync...")
                     HealthKitManager.shared.startBackgroundSync()
                 }
             } else if let error = error {
