@@ -36,12 +36,14 @@ Automated iteration using UITest (XCTest) to click buttons in the iOS Simulator.
 
 ## Next Action
 
-- [IN PROGRESS] **Update UITest to click "Add Mock Data" before "Sync Now"**
-  - UITest code: `UITests/KirtHealthSyncUITests.swift`
-  - Find the Add Mock Data button XCUIElement
-  - Tap it, wait 5s, then tap Sync Now
+- [IN PROGRESS] **Debug UITest crash — app crashes during waitForExistence at ~9s**
+  - Works: `xcrun simctl launch` (app stays running)
+  - Crashes: xcodebuild test (UITest interaction causes crash)
+  - Pattern: crash happens during XCUIElement waitForExistence
+  - Possible cause: iOS 26.2 + simulator + XCTest infrastructure issue
+  - Alternatives: (A) Debug crash root cause, (B) REST API mock write in cron instead, (C) Different simulator/approach
 - [ ] Build and verify UITest runs successfully
-- [ ] Push UITest fix via GitHub API
+- [ ] Push fix via GitHub API
 - [ ] Cron picks up and verifies metrics in Firebase
 
 ## Pending Decisions
@@ -67,7 +69,7 @@ Automated iteration using UITest (XCTest) to click buttons in the iOS Simulator.
 - **Simulator:** iPhone 17 Pro (A3BD8F71-F9AB-49CE-8070-CB435F331A33), iOS 26.2
 - **Xcode:** 26.2 (Build 17C52)
 - **Firebase project:** kirt-health-sync (859500401842)
-- **Firestore path:** kirt/daily/{date}/daily
+- **Firestore path:** kirt/daily/{date} (document, fixed from kirt/daily/{date}/daily sub-collection)
 - **GitHub repo:** https://github.com/jaredq-OC/kirt-health-sync
 - **Push method:** GitHub API (git CLI times out)
 
@@ -103,14 +105,27 @@ Commit: 751733d8ef4d116d05a5675cbe316476bea89fe7
 UITest: PASSED (0 failures)
 Firebase: 0 metrics (synced=none)
 
-## [2026-03-28 20:32 UTC] Run
-Commit: 751733d8ef4d116d05a5675cbe316476bea89fe7
+## [2026-03-28 21:30 UTC] Run
+Commit: 22e665a
 Build: PASS
-UITest: PASS (testDismissHealthKitPermissionAndSync)
-Firebase: metrics=0 (PATH MISMATCH - see below)
+Firebase: metrics_0 (old subcollection data exists; no new write since UITest crashes)
 PLANLOG
 
-**BLOCKER DISCOVERED:** Firestore path mismatch!
-- `writeMockDataDirectToFirestore()` writes to: `kirt/daily/{date}/daily` (sub-collection, wrong)
-- Cron check reads from: `kirt/daily/{date}` (document, correct path)
-- Fix needed: update `writeMockDataDirectToFirestore()` to write to `kirt/daily/{date}` directly
+**ISSUES FIXED:**
+- ✅ Firestore path: all writes now go to `kirt/daily/{date}` (not `/daily` sub-collection)
+- ✅ Mock Direct + Reset Anchors buttons in ContentView Debug section
+- ✅ UITest simplified: removed HK dialog handling, uses Mock Direct → Sync Now flow
+
+**NEW BLOCKER — UITest crash:**
+UITest crashes `com.kirt.healthsync` at ~9s after launch during `waitForExistence` calls.
+- App itself runs fine (`xcrun simctl launch` stays up 10+ seconds)
+- UITest crash happens even with simplified test (no HK dialog handling)
+- Crash is "in <external symbol>" — iOS 26.2 simulator + XCTest issue
+- NOT related to HK authorization dialog (skipped in --uitesting mode)
+
+**Next steps to resolve:**
+1. Debug why UITest crashes app (iOS 26.2 + XCTest + simulator issue)
+2. OR: Write mock data to Firebase via REST API in cron (bypass app entirely)
+3. OR: Use different simulator or approach for end-to-end test
+
+
