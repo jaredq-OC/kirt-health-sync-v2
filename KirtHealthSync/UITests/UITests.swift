@@ -36,26 +36,8 @@ final class KirtHealthSyncUITests: XCTestCase {
             }
         }
 
-        // Tap "Reset Anchors" to clear HK query anchors so mock data is re-queried
-        let resetButton = XCUIApplication().buttons["Reset Anchors"]
-        if resetButton.waitForExistence(timeout: 5) {
-            resetButton.tap()
-            print("Tapped Reset Anchors")
-            sleep(1)
-        } else {
-            print("Reset Anchors button not found")
-        }
-
-        // Tap "Mock Direct" to write mock metrics directly to Firestore (bypasses HK)
-        let mockDirectButton = XCUIApplication().buttons["Mock Direct"]
-        if mockDirectButton.waitForExistence(timeout: 10) {
-            mockDirectButton.tap()
-            print("Tapped Mock Direct")
-            // Wait for direct Firestore write to complete
-            sleep(3)
-        } else {
-            print("Mock Direct button not found")
-        }
+        // Wait for mock data to be written (async in app)
+        sleep(5)
 
         // Tap Sync Now
         let syncButton = XCUIApplication().buttons["Sync Now"]

@@ -671,7 +671,7 @@ class HealthKitManager {
 
         document["metrics"] = metrics
 
-        let docRef = db.collection("kirt").document("daily").collection(todayStr).document("daily")
+        let docRef = db.collection("kirt/daily").document(todayStr)
 
         docRef.setData(document, merge: true) { error in
             if let error = error {
@@ -733,7 +733,7 @@ private func writeDebugSnapshot(metrics: [String: Any], error: Error?) {
                 "weight": ["latest": 82.5, "unit": "kg"],
             ]
         ]
-        let docRef = db.collection("kirt").document("daily").collection(todayStr).document("daily")
+        let docRef = db.collection("kirt/daily").document(todayStr)
         docRef.setData(document, merge: true) { error in
             if let error = error {
                 print("[writeMockDataDirect] Firestore error: \(error)")
