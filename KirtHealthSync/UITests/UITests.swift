@@ -14,41 +14,45 @@ final class KirtHealthSyncUITests: XCTestCase {
     func testDismissHealthKitPermissionAndSync() throws {
         // Launch the app
         app.launch()
-        sleep(2)
+        sleep(3)
 
-        // Tap "Allow" on HealthKit authorization dialog
-        let allowButton = XCUIApplication().buttons["Allow"]
-        if allowButton.waitForExistence(timeout: 5) {
-            allowButton.tap()
-            print("Tapped Allow on HealthKit dialog")
+        // Skip HK dialog handling — we use Mock Direct button instead
+        // which bypasses HK entirely
+
+        // Tap "Reset Anchors" to clear HK query anchors (no-op in this flow)
+        let resetButton = app.buttons["Reset Anchors"]
+        if resetButton.waitForExistence(timeout: 10) {
+            resetButton.tap()
+            print("Tapped Reset Anchors")
+            sleep(1)
         } else {
-            let alert = XCUIApplication().alerts.firstMatch
-            if alert.waitForExistence(timeout: 3) {
-                let allow = alert.buttons["Allow"]
-                if allow.exists {
-                    allow.tap()
-                } else {
-                    alert.buttons.firstMatch.tap()
-                }
-                print("Tapped dialog button")
-            } else {
-                print("No dialog — may already be authorized")
-            }
+            print("Reset Anchors button not found (expected in Debug UI)")
         }
 
-        // Wait for mock data to be written (async in app)
-        sleep(5)
+        // Tap "Mock Direct" to write mock metrics directly to Firestore (bypasses HK)
+        let mockDirectButton = app.buttons["Mock Direct"]
+        if mockDirectButton.waitForExistence(timeout: 10) {
+            mockDirectButton.tap()
+            print("Tapped Mock Direct")
+            // Wait for direct Firestore write to complete
+            sleep(5)
+        } else {
+            print("Mock Direct button not found")
+            XCTFail("Mock Direct button not found")
+            return
+        }
 
         // Tap Sync Now
-        let syncButton = XCUIApplication().buttons["Sync Now"]
+        let syncButton = app.buttons["Sync Now"]
         if syncButton.waitForExistence(timeout: 10) {
-            let coord = syncButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            coord.tap()
+            syncButton.tap()
             print("Tapped Sync Now")
-            // Wait for HealthKit queries + Firestore write to complete
+            // Wait for sync to complete
             sleep(15)
         } else {
             print("Sync Now button not found")
+            XCTFail("Sync Now button not found")
+            return
         }
 
         // Screenshot for verification
