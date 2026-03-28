@@ -767,15 +767,6 @@ private func writeDebugSnapshot(metrics: [String: Any], error: Error?) {
         types.insert(HKObjectType.workoutType())
         return types
     }
-}
-
-    // MARK: - Debug: Direct HK Query (non-anchored, for testing)
-    func debugQueryAllData(completion: @escaping ([String: Any]) -> Void) {
-        let types: [(String, HKQuantityTypeIdentifier)] = [
-            ("bodyMass", .bodyMass),
-            ("restingHeartRate", .restingHeartRate),
-            ("stepCount", .stepCount),
-            ("activeEnergyBurned", .activeEnergyBurned),
 
     // MARK: - Debug: Direct HK Query (non-anchored, for testing)
     func debugQueryAllData(completion: @escaping ([String: Any]) -> Void) {
