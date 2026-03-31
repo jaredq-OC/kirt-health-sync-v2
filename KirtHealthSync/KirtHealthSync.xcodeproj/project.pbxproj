@@ -20,18 +20,32 @@
 		B1DCFDDE78CD5E1D779CA87B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CA353631375CC62332C73E2 /* GoogleService-Info.plist */; };
 		BA03C702FE61B136635C5EB4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 073CE9E8020A547BE50D96DE /* Assets.xcassets */; };
 		E2D675D8BA549AFA0FEE3B11 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21C79A6A51BE1DC5BE76F96F /* UIKit.framework */; };
+		F1BAC8183AE7B096C747A695 /* KirtHealthSyncUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AD40B666E44A20BE22D66FA /* KirtHealthSyncUITests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0BC6CED0B1FF62CE62D6798B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6497514D642EFF18C917BD44 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E49B8DACCE12E1B3137B5E6F;
+			remoteInfo = KirtHealthSync;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		073CE9E8020A547BE50D96DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		10FF5BCCC32949C64F905A7C /* KirtHealthSyncUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KirtHealthSyncUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		121B8AB379631A4E7F99A3D9 /* BackgroundTasks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BackgroundTasks.framework; path = System/Library/Frameworks/BackgroundTasks.framework; sourceTree = SDKROOT; };
 		21C79A6A51BE1DC5BE76F96F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		27AC31C12618C3BEFE45DF77 /* KirtHealthSyncApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KirtHealthSyncApp.swift; sourceTree = "<group>"; };
 		4CA353631375CC62332C73E2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		69F66A304B40DF7D08964298 /* KirtHealthSync.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = KirtHealthSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AD40B666E44A20BE22D66FA /* KirtHealthSyncUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KirtHealthSyncUITests.swift; sourceTree = "<group>"; };
 		810CB500E71CBA12A5BFF6B1 /* KirtHealthSync.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KirtHealthSync.entitlements; sourceTree = "<group>"; };
 		812A00823F606119942F1114 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		90C5698ECE7FA528C7F0BEC2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B252F67BB90DA66F6CAA9329 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C409ABE8C92B69AFE42DA736 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E59BC0BDDFDCB36A68F5546E /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		F7B77253847BF06DFF92D86C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
@@ -67,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				69F66A304B40DF7D08964298 /* KirtHealthSync.app */,
+				10FF5BCCC32949C64F905A7C /* KirtHealthSyncUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -79,6 +94,15 @@
 				21C79A6A51BE1DC5BE76F96F /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5D7B87960E7EB51D27618DBD /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				B252F67BB90DA66F6CAA9329 /* Info.plist */,
+				7AD40B666E44A20BE22D66FA /* KirtHealthSyncUITests.swift */,
+			);
+			path = UITests;
 			sourceTree = "<group>";
 		};
 		63DF397687B2E4641371E0B9 /* Sources */ = {
@@ -125,6 +149,7 @@
 			children = (
 				ABB353F208A8B49935A59BFA /* Resources */,
 				63DF397687B2E4641371E0B9 /* Sources */,
+				5D7B87960E7EB51D27618DBD /* UITests */,
 				565968620EDCF5901D4BF3C6 /* Frameworks */,
 				4A0434794836FF68350E304F /* Products */,
 			);
@@ -133,6 +158,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		7F77DA240F251AAF7DC0DF6F /* KirtHealthSyncUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 06B16D547200163BB06A11EA /* Build configuration list for PBXNativeTarget "KirtHealthSyncUITests" */;
+			buildPhases = (
+				6B0264128C201A62E735437A /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E69853F3A95581579FA5206D /* PBXTargetDependency */,
+			);
+			name = KirtHealthSyncUITests;
+			packageProductDependencies = (
+			);
+			productName = KirtHealthSyncUITests;
+			productReference = 10FF5BCCC32949C64F905A7C /* KirtHealthSyncUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		E49B8DACCE12E1B3137B5E6F /* KirtHealthSync */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 20C067E4BCD4882991AD39BD /* Build configuration list for PBXNativeTarget "KirtHealthSync" */;
@@ -164,6 +207,10 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
+					7F77DA240F251AAF7DC0DF6F = {
+						ProvisioningStyle = Automatic;
+						TestTargetID = E49B8DACCE12E1B3137B5E6F;
+					};
 					E49B8DACCE12E1B3137B5E6F = {
 						ProvisioningStyle = Automatic;
 					};
@@ -187,6 +234,7 @@
 			projectRoot = "";
 			targets = (
 				E49B8DACCE12E1B3137B5E6F /* KirtHealthSync */,
+				7F77DA240F251AAF7DC0DF6F /* KirtHealthSyncUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -216,7 +264,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6B0264128C201A62E735437A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1BAC8183AE7B096C747A695 /* KirtHealthSyncUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E69853F3A95581579FA5206D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E49B8DACCE12E1B3137B5E6F /* KirtHealthSync */;
+			targetProxy = 0BC6CED0B1FF62CE62D6798B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		5FC779FB08E04B3EA5EB6CD6 /* Release */ = {
@@ -262,6 +326,28 @@
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7B252862776DA7EF0E6EB74B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = UITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kirt.healthsync.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = KirtHealthSync;
 			};
 			name = Debug;
 		};
@@ -317,6 +403,28 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B5358498BA7E649F7FB68610 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = UITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kirt.healthsync.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = KirtHealthSync;
 			};
 			name = Release;
 		};
@@ -385,6 +493,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		06B16D547200163BB06A11EA /* Build configuration list for PBXNativeTarget "KirtHealthSyncUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B252862776DA7EF0E6EB74B /* Debug */,
+				B5358498BA7E649F7FB68610 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		20C067E4BCD4882991AD39BD /* Build configuration list for PBXNativeTarget "KirtHealthSync" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

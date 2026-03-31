@@ -11,10 +11,13 @@ schemes:
     build:
       targets:
         KirtHealthSync: all
+        KirtHealthSyncUITests: all
     run:
       config: Debug
     test:
       config: Debug
+      targets:
+        - KirtHealthSyncUITests
     profile:
       config: Release
     analyze:
@@ -56,6 +59,23 @@ targets:
         product: FirebaseAuth
       - package: Firebase
         product: FirebaseAnalytics
-      - framework: UIKit.framework
-      - framework: HealthKit.framework
-      - framework: BackgroundTasks.framework
+      - sdk: UIKit.framework
+      - sdk: HealthKit.framework
+      - sdk: BackgroundTasks.framework
+
+  KirtHealthSyncUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+        type: group
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kirt.healthsync.uitests
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Automatic
+        GENERATE_INFOPLIST_FILE: YES
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: 1
+    dependencies:
+      - target: KirtHealthSync
