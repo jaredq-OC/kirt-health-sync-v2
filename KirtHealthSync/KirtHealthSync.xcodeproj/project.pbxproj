@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25A3033125587D44528411AC /* MockDataInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E36361226AF3C09F5BE3A603 /* MockDataInputView.swift */; };
 		33A600E11BBAEF7A6DC72EA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C5698ECE7FA528C7F0BEC2 /* AppDelegate.swift */; };
 		3B81304A37BAD16A7FF20503 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF46E4571286030F098071B5 /* LaunchScreen.storyboard */; };
 		46BA3A6292082A4403D8163E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5D676CC12E97CA8A1496C45A /* FirebaseAuth */; };
@@ -53,6 +54,7 @@
 		B1618E1407C4AE1C06F6167B /* KirtHealthSync-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KirtHealthSync-Bridging-Header.h"; sourceTree = "<group>"; };
 		B252F67BB90DA66F6CAA9329 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C409ABE8C92B69AFE42DA736 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E36361226AF3C09F5BE3A603 /* MockDataInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataInputView.swift; sourceTree = "<group>"; };
 		E59BC0BDDFDCB36A68F5546E /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		F7B77253847BF06DFF92D86C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		FF46E4571286030F098071B5 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				812A00823F606119942F1114 /* ContentView.swift */,
+				E36361226AF3C09F5BE3A603 /* MockDataInputView.swift */,
 				A5E343725A1B239936A20E39 /* SettingsView.swift */,
 			);
 			path = Views;
@@ -272,6 +275,7 @@
 				857D52BD207F2AB3B206EA1B /* FirestoreInit.m in Sources */,
 				B15A695970A4A5C25D0612FC /* HealthKitManager.swift in Sources */,
 				5FB35B5793E5AC0233E1C523 /* KirtHealthSyncApp.swift in Sources */,
+				25A3033125587D44528411AC /* MockDataInputView.swift in Sources */,
 				5DB2BE87B66F2CE43E80931F /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

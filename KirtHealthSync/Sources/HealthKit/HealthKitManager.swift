@@ -30,12 +30,6 @@ class HealthKitManager {
     private let anchorKeyPrefix = "HKManager_Anchor_"
     private let lastSyncTimeKey = "HKManager_LastSyncTime"
 
-    // MARK: - Firestore collection path
-    private var dailyCollectionPath: String {
-        let today = ISO8601DateFormatter().string(from: Date()).prefix(10)
-        return "kirt/daily/\(today)"
-    }
-
     var lastSyncTimeString: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -598,7 +592,7 @@ class HealthKitManager {
 
     // MARK: - Firestore Batch Upsert
 
-    /// Writes ONE document to kirt/daily/{YYYY-MM-DD} containing all accumulated metrics.
+    /// Writes ONE document to kirt/daily/daily/{YYYY-MM-DD} containing all accumulated metrics.
     /// Uses setData with merge:true so each metric field is updated without overwriting
     /// the entire document (safe for concurrent syncs).
     private func writeBatchUpsert(completion: @escaping (Bool) -> Void) {
@@ -674,7 +668,7 @@ class HealthKitManager {
 
         document["metrics"] = metrics
 
-        let docRef = db!.collection("kirt").document("daily").collection(todayStr).document("daily")
+        let docRef = db!.collection("kirt").document("daily").collection("daily").document(todayStr)
 
         docRef.setData(document, merge: true) { error in
             if let error = error {

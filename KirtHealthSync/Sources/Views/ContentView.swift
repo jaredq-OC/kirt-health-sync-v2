@@ -4,6 +4,7 @@ import FirebaseFirestore
 
 struct ContentView: View {
     @StateObject private var viewModel = HealthDataViewModel()
+    @State private var showingMockDataInput = false
 
     var body: some View {
         NavigationView {
@@ -50,14 +51,30 @@ struct ContentView: View {
             }
             .navigationTitle("Kirt Health Sync")
             .toolbar {
+                #if DEBUG
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showingMockDataInput = true
+                    } label: {
+                        Image(systemName: "ladybug")
+                            .foregroundColor(.orange)
+                    }
+                }
+                #endif
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: SettingsView()) {
                         Image(systemName: "gear")
                     }
+                    .accessibilityIdentifier("settingsGearButton")
                 }
             }
             .onAppear {
                 viewModel.loadData()
+            }
+            .sheet(isPresented: $showingMockDataInput) {
+                #if DEBUG
+                MockDataInputView()
+                #endif
             }
         }
     }
@@ -103,7 +120,7 @@ class HealthDataViewModel: ObservableObject {
         let docPath = "kirt/daily/\(todayDateString)"
         var docRef: DocumentReference? = nil
         do {
-            docRef = try db.document(docPath)
+            docRef = try db.collection("kirt").document("daily").collection("daily").document(todayDateString)
         } catch {
             print("[HealthDataViewModel] Firestore document reference error: \(error)")
             return

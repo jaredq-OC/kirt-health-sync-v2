@@ -21,6 +21,20 @@
                ReferencedContainer = "container:KirtHealthSync.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7F77DA240F251AAF7DC0DF6F"
+               BuildableName = "KirtHealthSyncUITests.xctest"
+               BlueprintName = "KirtHealthSyncUITests"
+               ReferencedContainer = "container:KirtHealthSync.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -39,6 +53,17 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7F77DA240F251AAF7DC0DF6F"
+               BuildableName = "KirtHealthSyncUITests.xctest"
+               BlueprintName = "KirtHealthSyncUITests"
+               ReferencedContainer = "container:KirtHealthSync.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>
