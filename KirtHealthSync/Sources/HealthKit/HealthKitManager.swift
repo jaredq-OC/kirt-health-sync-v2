@@ -15,7 +15,7 @@ class HealthKitManager {
     // MARK: - Firestore collection path
     private var dailyCollectionPath: String {
         let today = ISO8601DateFormatter().string(from: Date()).prefix(10)
-        return "kirt/daily/\(today)"
+        return "kirt/daily/daily/\(today)"
     }
 
     // MARK: - Batch metrics accumulator
@@ -671,7 +671,7 @@ class HealthKitManager {
 
         document["metrics"] = metrics
 
-        let docRef = db.collection("kirt/daily").document(todayStr)
+        let docRef = db.collection("kirt/daily/daily").document(todayStr)
 
         docRef.setData(document, merge: true) { error in
             if let error = error {
@@ -733,7 +733,7 @@ private func writeDebugSnapshot(metrics: [String: Any], error: Error?) {
                 "weight": ["latest": 82.5, "unit": "kg"],
             ]
         ]
-        let docRef = db.collection("kirt/daily").document(todayStr)
+        let docRef = db.collection("kirt/daily/daily").document(todayStr)
         docRef.setData(document, merge: true) { error in
             if let error = error {
                 print("[writeMockDataDirect] Firestore error: \(error)")
